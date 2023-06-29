@@ -7,7 +7,7 @@ from scripts.globals.globals_vars import *
 from scripts.system.py_gameObjects import PY_gameObjects
 
 from scripts.system.inputKeys import InputKeysSystem
-from scripts.system.SpriteSheetSystem import SpriteAnimations
+#from scripts.system.SpriteSheetSystem import SpriteAnimations
 
 #----------------------------------------------------------
 

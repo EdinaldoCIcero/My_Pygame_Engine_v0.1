@@ -8,7 +8,7 @@ from scripts.globals.globals_vars import *
 
 #-------------------------------------------------------------
 
-class SpriteAnimations( pygame.sprite.Sprite ):
+class SetSpriteSheetSystem( pygame.sprite.Sprite ):
     def __init__( self , filename_img , num_cols_ronw = [ 8 , 2] , resolutions = [ 1888 , 455 ] ):
         pygame.sprite.Sprite.__init__(self)
 
@@ -19,7 +19,7 @@ class SpriteAnimations( pygame.sprite.Sprite ):
         self.resolutions            = resolutions
         self.cols_rows              = num_cols_ronw
 
-
+     
         self.move_x_sprite          = 0
         self.frame_delay_time       = 0 
 
@@ -35,10 +35,10 @@ class SpriteAnimations( pygame.sprite.Sprite ):
         self.position_x        = 0
         self.position_y        = 0
 
+        dimensions = self.getSpriteSheetScales()
 
-        #print( self.scale_sprite_frame_w )
-
-        #self.getSpriteSheetScales()
+        
+        #---------------------------------------------------------------
 
 
 
@@ -70,17 +70,12 @@ class SpriteAnimations( pygame.sprite.Sprite ):
 
 
 #------------------------------------------------------------------------------
-    def drawSprite( self, screen ):
+    def draw( self, screen ):
         end_sprite = self.getSprite(  self.sprite_position_x  , self.sprite_position_y )
-
         screen.blit( end_sprite, ( self.position_x  , self.position_y ) )
 
-
         pass
-
-
-
-
+        
 
 #------------------------------------------------------------------------------
     def playAction( self , speed_animation , orientation = "horizontal" ):

@@ -23,7 +23,7 @@ from scripts.globals.globalD import *
 
 from scripts.player.libs.PlayerControll import PlayerController
 
-from scripts.system.SpriteSheetSystem import SpriteAnimations
+from scripts.system.SpriteSheetSystem import SetSpriteSheetSystem
 
 #---------------------------------------------
 pygame.init()
@@ -51,31 +51,23 @@ class GameEngine():
 
 
         
-
-
         #self.player = PlayerController( self.player_group )
 
         
-        self.player_1    = SpriteAnimations( filename_img   = self.image_player_path ,
-                                             num_cols_ronw  = [ 8, 2] , 
-                                             resolutions    = [ 1888 , 455 ] 
-                                             )
+        self.player_1    = SetSpriteSheetSystem( filename_img   = self.image_player_path ,
+                                                num_cols_ronw  = [ 8, 2] , 
+                                                resolutions    = [ 1888 , 455 ] 
+                                                )
 
 
 
         self.player_sprite_group    = pygame.sprite.Group()
-        self.player_sprite_group_2  = pygame.sprite.Group()
-
         self.player_sprite_group.add( self.player_1  )
 
 
         print( self.player_sprite_group )
 
-        #self.player_2    = SpriteAnimations( self.player_sprite_group_2 , 
-        #                                     filename_img   = self.image_player_path ,
-        #                                     num_cols_ronw  = [ 8 , 2 ] , 
-        #                                     resolutions    = [ 1888 , 455 ]
-        #                                     )
+
         
         
 
@@ -116,28 +108,23 @@ class GameEngine():
     def DrawElements(self):
         MousePos = pygame.mouse.get_pos()
 
-         
-        
-
-
 
         self.DrawGrid()
 
-        #self.player_sprite_group.update()
-        #self.player_sprite_group.draw( TELA )
 
-
-
-        self.player_1.drawSprite( screen = TELA )
-        
-
+        self.player_1.draw( screen = TELA )
         self.player_1.playAction( speed_animation = 5 , orientation = "horizontal"  )
-
-
         self.player_1.position_x += 1 
 
        
+
+       
         pass
+
+
+
+
+
 
 
 
