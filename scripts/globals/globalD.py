@@ -2,4 +2,9 @@ import pygame
 
 #---------------------------------------
 
-globalDict = { "" : "" , }
+globalDict = { 
+    "" : "" ,
+    "PLAYER" :  "" ,
+    
+    } 
+

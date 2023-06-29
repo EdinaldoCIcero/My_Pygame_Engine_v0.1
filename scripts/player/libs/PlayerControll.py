@@ -1,11 +1,13 @@
 import pygame
-
+import pygame.math
 
 #----------------------------------------------------------
 from scripts.globals.globalD import *
+from scripts.globals.globals_vars import *
+from scripts.system.py_gameObjects import PY_gameObjects
 
 from scripts.system.inputKeys import InputKeysSystem
-from scripts.system.playSpriteSheet import SpriteAnimations
+from scripts.system.SpriteSheetSystem import SpriteAnimations
 
 #----------------------------------------------------------
 
@@ -13,131 +15,118 @@ from scripts.system.playSpriteSheet import SpriteAnimations
 
 
 
-class PlayerController( pygame.sprite.Sprite ):
-    def __init__( self , filename_img ):
-        super().__init__( )
-
-
-        globalDict["PLAYER"] = self
+class PlayerController( PY_gameObjects ):
+    def __init__(self  ):
+        super().__init__()
 
         self.inputs_keys = InputKeysSystem()
 
+        self.scale_X     = 400
+        self.scale_Y     = 400
 
 
-        self.sprite_img = filename_img
-        self.scale      = 64
-        self.time       = 0
-
-
-        self.sprite_sheet         = pygame.image.load( self.sprite_img ).convert()
-
-        self.move_x_sprite          = 0
-        self.move_y_sprite          = 0
-
-        self.frame_delay_time       = 0 
-
-        self.speed_move             = 5
-        self.player_position_x      = 50
-        self.player_position_y      = 50
+        #self.obj_rect = self.getRectObject( object_to_rect  = self.surf_sprite , 
+                                           # positions       = [ 0 , 0 ] , 
+                                           # scales          = [ self.scale_X  , self.scale_Y ]
+                                           # )
 
 
 
-        #self.sprite_sheet         = pygame.transform.scale( self.sprite_sheet , [ 576 , 24 ] )
-        #self.sprite_sheet_rect    = self.sprite_sheet.get_rect()
+        self.Center_X = LARGURA - self.obj_rect.center[0]
+        self.Center_Y = ALTURA  - self.obj_rect.center[1]
 
 
-    def drawSprite( self, screen , world_positions , x , y , w , h  ):
-        end_sprite = self.getSprite(  x , y , w , h )
-        screen.blit( end_sprite, ( world_positions[0] , world_positions[1] ) )
-        pass
+        self.time           = 0
+        self.frame          = 1
 
-
-
-    def getSprite( self, x , y , w , h ):
-        sprite = pygame.Surface( ( w , h ) )
-        sprite.set_colorkey( ( 0 , 0 , 0 ) )
-        
-        #self.sprite_sheet = pygame.transform.scale( self.sprite_sheet , [  w , h ] )
-        sprite.blit( self.sprite_sheet , ( 0,0 ) , ( x , y , w , h) )
-
-        return sprite
+        self.SpeedMove  = 3
+        self.vida       = 100
+        self.Pos_X      = 0
+        self.Pos_Y      = 0 
 
         
-    
-    def playerAnimations( self ):
 
-        if self.frame_delay_time >= 5 :
-            self.move_x_sprite += 236
-            self.frame_delay_time = 0
+    def FrameTimeSprites(self):## Troca de FrameTimeSprites #######
+        if self.time == 6:
+            self.time  = 1
+            self.frame += 1
+        if self.frame >= 9:
+            self.frame = 1
+      
 
-        if self.move_x_sprite == 1888:
-            self.move_x_sprite = 0 
-
-        
-        pass
-
-
-    def playerMovement(self):
-
-
-        pass
-
-
-
-
-    def playerUpdate( self , screen ):
+    def MovePlayer(self): ###### Movimentação do Player ######
         self.keys           = pygame.key.get_pressed()
         self.MousePos       = pygame.mouse.get_pos()
         self.mx , self.my   = pygame.mouse.get_pos()
+        self.MouseB         = pygame.mouse.get_pressed()
         #----------------------------------------------------
-        inputs_t = self.inputs_keys.inputsKeyboards()
+        self.keys_bo = self.inputs_keys.inputsKeyboards()
         
-        self.frame_delay_time += 1 
 
+        #if self.rect.collidepoint(self.MousePos) and self.MouseB[0]:
+          #  self.rect.center = self.MousePos
+          #  self.Pos_X = self.mx
+          #  self.Pos_Y = self.my
+
+       # else:
+
+
+        if self.keys_bo["e"]:
+            self.WorldPositions(  positions = [ 80 , 80 ] )
+            print("Aqui E ")
         
-        #if self.keys[pygame.K_w]:
         
-        if inputs_t["w"]:
-            self.playerAnimations()
-            self.player_position_y -= self.speed_move
+        if self.keys_bo["w"]:
+            self.Pos_Y -= self.SpeedMove
             
-        if inputs_t["s"]:
-            self.playerAnimations()
-            self.player_position_y += self.speed_move
-            
-
-        if inputs_t["a"]:
-            self.playerAnimations()
-            self.player_position_x -= self.speed_move
-            self.move_y_sprite      = 228
+            self.WorldPositions(  positions = [ 80 , self.Pos_Y ] )
+           
 
 
-        if inputs_t["d"]:
-            self.playerAnimations()
-
-            self.player_position_x += self.speed_move
-            self.move_y_sprite      = 0
-    
+        self.applyMovement( vector = [ 2 , -2 ] )
         
-        if self.player_position_x >= 1024:
-            self.player_position_x = -80 
-        
-        if self.player_position_y >= 600:
-            self.player_position_y = 10 
 
 
 
+    def ColisionPlayer(self , Object): #Logicas do Player 
+        self.keys = pygame.key.get_pressed()
+        self.MousePos = pygame.mouse.get_pos()
+        self.mx , self.my = pygame.mouse.get_pos()
+        self.MouseB = pygame.mouse.get_pressed()
 
-        self.drawSprite(    screen = screen , 
-                            world_positions = ( self.player_position_x , self.player_position_y ) ,  
-                            x = self.move_x_sprite  , y = self.move_y_sprite  , 
-                            
-                            w = 236  , h = 228
-                        )
-  
+
+        #self.ColidList = pygame.Rect.collidelist(Object)
+        self.ColisionCasas = pygame.sprite.spritecollide( self , Object , False)
+
+        if self.ColisionCasas:
+            pass
+
+
+
+    def LogicsPlayer(self , tela ): #Logicas do Player 
+        self.keys = pygame.key.get_pressed()
+        self.MousePos = pygame.mouse.get_pos()
+        self.mx , self.my = pygame.mouse.get_pos()
+        self.MouseB = pygame.mouse.get_pressed()
+
+        #self.BarraVidaPlayer = pygame.Rect(( self.rect[0] - 20 , self.rect[1] -15 ), ( self.vida , 5))
+        #tela.fill( [48,52,55] , self.BarraVidaPlayer)
+
+        #self.DanoInimigo = pygame.sprite.spritecollide( P , GrupoDano , False)
+
+        #if self.DanoInimigo:
+            #self.vida -= 1
         pass
 
 
+    def update( self , screen  ):
+        #self.FrameTimeSprites()
+       
+
+        self.MovePlayer()
+        
+        #self.LogicsPlayer()
+        #self.ColisionPlayer(Object)
 
 
-
+        pass

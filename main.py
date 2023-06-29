@@ -14,10 +14,16 @@ if getattr(sys, "frozen",False):
 
 #---------------------------------------------
 from random import randint 
+import pygame.math
 
 
+#---------------------------------------------
+from scripts.globals.globals_vars import *
 from scripts.globals.globalD import *
+
 from scripts.player.libs.PlayerControll import PlayerController
+
+from scripts.system.SpriteSheetSystem import SpriteAnimations
 
 #---------------------------------------------
 pygame.init()
@@ -25,12 +31,13 @@ pygame.init()
 
 
 
-TELA             = pygame.display.set_mode([LARGURA , ALTURA])# , pygame.RESIZABLE
+TELA = pygame.display.set_mode([LARGURA , ALTURA])# , pygame.RESIZABLE
 pygame.mouse.set_visible(True)
 pygame.display.set_caption("<Display-Game-Engine>")
 #pygame.display.set_icon( )
 
-#player_sheet_sprite = PlayerController( filename_img = "doux.png")
+
+
 
 
 
@@ -39,8 +46,37 @@ class GameEngine():
     def __init__(self):
         super().__init__()
 
-        self.player_sheet_sprite = PlayerController( filename_img = "assets/sprites/characters/player/dino_run_sheet.png" )
 
+        self.image_player_path = "assets/sprites/characters/player/dino_run_sheet.png" 
+
+
+        
+
+
+        #self.player = PlayerController( self.player_group )
+
+        
+        self.player_1    = SpriteAnimations( filename_img   = self.image_player_path ,
+                                             num_cols_ronw  = [ 8, 2] , 
+                                             resolutions    = [ 1888 , 455 ] 
+                                             )
+
+
+
+        self.player_sprite_group    = pygame.sprite.Group()
+        self.player_sprite_group_2  = pygame.sprite.Group()
+
+        self.player_sprite_group.add( self.player_1  )
+
+
+        print( self.player_sprite_group )
+
+        #self.player_2    = SpriteAnimations( self.player_sprite_group_2 , 
+        #                                     filename_img   = self.image_player_path ,
+        #                                     num_cols_ronw  = [ 8 , 2 ] , 
+        #                                     resolutions    = [ 1888 , 455 ]
+        #                                     )
+        
         
 
     
@@ -50,9 +86,7 @@ class GameEngine():
 #-------------------------------------------------------------------------------
 
     def updateElements(self):
-
         pass
-
 
 
     def DrawGrid(self):
@@ -72,22 +106,48 @@ class GameEngine():
             lines += 32 
             line_2 = pygame.draw.line( TELA , cor , ( 0 , lines), (  1024 ,lines ), larguraline )
 
+           
+
 
         pass
-
 
 
 #-------------------------------------------------------------------------------
     def DrawElements(self):
         MousePos = pygame.mouse.get_pos()
 
+         
+        
+
+
+
         self.DrawGrid()
 
+        #self.player_sprite_group.update()
+        #self.player_sprite_group.draw( TELA )
 
-        self.player_sheet_sprite.playerUpdate( screen = TELA)
+
+
+        self.player_1.drawSprite( screen = TELA )
+        
+
+        self.player_1.playAction( speed_animation = 5 , orientation = "horizontal"  )
+
+
+        self.player_1.position_x += 1 
+
+       
         pass
 
 
+
+    def runEvents(self):
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        pass
 
 
 
@@ -103,31 +163,27 @@ class GameEngine():
         while GAMELOOP:
             delta_Timer = FPS.tick(60)
             TELA.fill( COLOR_SCREEN )
+            self.runEvents()
+
+           
 
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                #if event.type == VIDEORESIZE:
-                   # screen = pygame.display.set_mode([event.w , event.h] , pygame.RESIZABLE)
-
-
-               
-          
-
+            #self.player.update( screen = TELA )
 
 
 
             self.DrawElements()
+
             pygame.display.update()
         pygame.quit()  
 
+
+
 #-------------------------------------------------------------------------------------------------------
 
-game = GameEngine()
-game.main()
+if __name__ == "__main__":
+    game = GameEngine()
+    game.main()
 
 #-------------------------------------------------------------------------------------------------------
 
