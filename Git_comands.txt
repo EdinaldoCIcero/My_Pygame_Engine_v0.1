@@ -1,0 +1,10 @@
+
+Usando o Git para os projetos :
+
+----> git init   			    | para iniciar um repositorio
+----> git branch -M "main"		    | para mudar o nome da branch a ser adicionado os files
+----> git add -A 			    | para adicionar todos os files
+----> git status 			    | para ver o estado dos files que foram adicionados
+----> git commit -m "nome do commit" 	    | mensagem de apresentação 
+----> gir remote add origin <link do repos> |
+----> git push origin master -f 	    | para enviar todos os files para um repositogio no github existente.
